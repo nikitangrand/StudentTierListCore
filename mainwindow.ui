@@ -70,7 +70,14 @@
       </widget>
      </item>
      <item row="2" column="4">
-      <widget class="QDateEdit" name="dateEdit"/>
+      <widget class="QDateEdit" name="dateEdit">
+       <property name="displayFormat">
+        <string>dd.MM.yyyy</string>
+       </property>
+       <property name="calendarPopup">
+        <bool>true</bool>
+       </property>
+      </widget>
      </item>
      <item row="2" column="10">
       <widget class="QLineEdit" name="lineEdit_6"/>
@@ -176,6 +183,19 @@
      <string>готово</string>
     </property>
    </widget>
+   <widget class="QLabel" name="statusLabel">
+    <property name="geometry">
+     <rect>
+      <x>430</x>
+      <y>110</y>
+      <width>241</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -183,7 +203,7 @@
      <x>0</x>
      <y>0</y>
      <width>833</width>
-     <height>21</height>
+     <height>26</height>
     </rect>
    </property>
   </widget>
