@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Страница 1</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #fcfbf9;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+            background: linear-gradient(to right, #e0d5ef, #e5c6d6);
+            align-items: center;
+        }
+
+        h1 {
+            color: #6fa2e8;
+            font-size: 48px;
+        }
+
+        nav {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        nav a {
+            font-size: 20px;
+            font-weight: bold;
+            color: #eb85b3;
+            text-decoration: none;
+            margin-bottom: 10px;
+        }
+
+        .input-section {
+            background: linear-gradient(to right, #f3e4fd, #e9d2f0);
+            padding: 20px;
+        }
+
+        .input-section input {
+            margin: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #DAF0F6;
+            border-radius: 5px;
+            color: #2D8AC5;
+            box-shadow: 3px 3px 3px #BEDAEC;
+            border: none;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background-color: #2D8AC5;
+            color: #DAF0F6;
+            box-shadow: none;
+        }
+
+        .content {
+            background: #fffedb;
+            height: 400px;
+            margin: 20px;
+            border: 2px solid #e5d6f6;
+            overflow-y: auto;
+        }
+
+        footer {
+            padding: 20px;
+            background: #f6eceb;
+            font-size: 20px;
+        }
+
+        footer span {
+            color: #72bc72;
+        }
+        footer .footer1 {
+            color:#AAA1CE;
+        }
+        footer .footer2 {
+            color:#72C797;
+        }
+        footer .footer3 {
+            color:#82C0E7;
+        }
+        footer .footer4 {
+            color:#EEAF78;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>NAME</h1>
+        <nav>
+            <a href="/second.html">Тир-лист</a>
+            <a href="https://github.com/nikitangrand/StudentTierListCore">Github</a>
+        </nav>
+    </header>
+
+    <section class="input-section">
+        <input type="text" id="search-id" placeholder="Ввод ID">
+        <input type="text" id="search-name" placeholder="Ввод имени">
+        <button class="button" onclick="search()">Поиск</button>
+    </section>
+
+    <section class="content">
+        <div id="results"></div>
+    </section>
+    <footer>
+        <span class="footer1">© Сергуц Никита</span><span class="footer5"> Лебедь Полина</span> <span class="footer2">Сигневич Виктория</span> <span class="footer3">Герасимчик Мария</span> <span class="footer4">Малёнкин Захар</span>
+    </footer>
+
+    <script>
+        function search() {
+            const id = document.getElementById('search-id').value;
+            const name = document.getElementById('search-name').value;
+            fetch(`/search?id=${id}&name=${name}`)
+                .then(response => response.json())
+                .then(data => {
+                    const resultsDiv = document.getElementById('results');
+                    resultsDiv.innerHTML = '';
+                    if (data.length > 0) {
+                        localStorage.setItem('searchedStudent', JSON.stringify(data[0]));
+                        data.forEach(entry => {
+                            const resultItem = document.createElement('div');
+                            resultItem.innerHTML = `
+                                <p><strong>ID:</strong> ${entry.ID}</p>
+                                <p><strong>ФИО:</strong> ${entry.NAME}</p>
+                                <p><strong>Дата рождения:</strong> ${entry.DATE}</p>
+                                <p><strong>Курс:</strong> ${entry.COURSE}</p>
+                                <p><strong>Группа:</strong> ${entry.GROUD}</p>
+                                <p><strong>Сред. балл:</strong> ${entry.MARK.toFixed(2)}</p>
+                                <p><strong>Оценка:</strong> ${calculateRank(entry.MARK)}</p>
+                                <hr>
+                            `;
+                            resultsDiv.appendChild(resultItem);
+                        });
+                    } else {
+                        resultsDiv.innerHTML = '<p>Ничего не найдено</p>';
+                    }
+                });
+        }
+    
+        function calculateRank(mark) {
+            if (mark > 8) {
+                return 'A';
+            } else if (mark > 6) {
+                return 'B';
+            } else if (mark > 4) {
+                return 'C';
+            } else if (mark > 2) {
+                return 'D';
+            } else {
+                return 'E';
+            }
+        }
+    </script>    
+</body>
+</html>

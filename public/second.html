@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Страница 2</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #fcfbf9;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+            background: linear-gradient(to right, #e0d5ef, #e5c6d6);
+            align-items: center;
+        }
+
+        h1 {
+            color: #6fa2e8;
+            font-size: 48px;
+        }
+
+        nav {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        nav a {
+            font-size: 20px;
+            font-weight: bold;
+            color: #eb85b3;
+            text-decoration: none;
+            margin-bottom: 10px;
+        }
+
+        .content {
+            background: #fffedb;
+            padding: 20px;
+            border: 2px solid #e5d6f6;
+            height: 420px;
+            overflow-y: auto;
+        }
+
+        h2 {
+            color: #eb85b3;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff9db;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        .highlight {
+            background-color: #ffeb3b; 
+        }
+
+        footer {
+            padding: 20px;
+            background: #f6eceb;
+            font-size: 20px;
+        }
+
+        footer span {
+            color: #72bc72;
+        }
+        
+        footer .footer1 { color:#AAA1CE; }
+        footer .footer2 { color:#72C797; }
+        footer .footer3 { color:#82C0E7; }
+        footer .footer4 { color:#EEAF78; }
+        footer .footer5 { color:#eb85b3; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>NAME</h1>
+        <nav>
+            <a href="/index.html">Главная страница</a>
+            <a href="https://github.com/nikitangrand/StudentTierListCore">GitHub</a>
+        </nav>
+    </header>
+    <section class="content">
+        <h2>TIER LIST</h2>
+        <table id="data-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>ФИО</th>
+                    <th>Дата рождения</th>
+                    <th>Курс</th>
+                    <th>Группа</th>
+                    <th>Сред. балл</th>
+                    <th>Оценка</th>
+                </tr>
+            </thead>
+            <tbody id="table-body"></tbody>
+        </table>
+    </section>
+    <footer>
+        <span class="footer1">© Сергуц Никита</span><span class="footer5"> Лебедь Полина</span> 
+        <span class="footer2">Сигневич Виктория</span> 
+        <span class="footer3">Герасимчик Мария</span> 
+        <span class="footer4">Малёнкин Захар</span>
+    </footer>
+
+    <script>
+        function calculateRank(mark) {
+            if (mark > 8.5) return 'S';
+            if (mark > 7) return 'A';
+            if (mark > 5.5) return 'B';
+            if (mark > 4) return 'C';
+            return 'E';
+        }
+
+        function rankToNumeric(rank) {
+            switch(rank) {
+                case 'S': return 1; 
+                case 'A': return 2; 
+                case 'B': return 3; 
+                case 'C': return 4; 
+                default: return 5; 
+            }
+        }
+
+        fetch('/data')
+          .then(response => response.json())
+          .then(data => {
+              data.forEach(entry => entry.rank = calculateRank(entry.MARK));
+              data.sort((a, b) => rankToNumeric(a.rank) - rankToNumeric(b.rank));
+
+              const tableBody = document.getElementById('table-body');
+              const searchedStudent = JSON.parse(localStorage.getItem('searchedStudent'));
+
+              data.forEach(entry => {
+                  const markFormatted = entry.MARK.toFixed(2);
+                  const row = document.createElement('tr');
+                  row.innerHTML = `
+                      <td>${entry.ID}</td>
+                      <td>${entry.NAME}</td>
+                      <td>${entry.DATE}</td>
+                      <td>${entry.COURSE}</td>
+                      <td>${entry.GROUD}</td>
+                      <td>${markFormatted}</td>
+                      <td>${entry.rank}</td>`;
+                  
+                  if (searchedStudent && searchedStudent.ID === entry.ID) {
+                      row.classList.add('highlight');
+                      tableBody.prepend(row);
+                  } else {
+                      tableBody.appendChild(row);
+                  }
+              });
+
+              localStorage.removeItem('searchedStudent');
+          });
+    </script>
+</body>
+</html>
