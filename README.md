@@ -1,9 +1,3 @@
-
-***
-
-StudentTierListCore
-
-```markdown
 # StudentTierListCore
 
 Приложение для ранжирования студентов по категориям (tier list) на C++.
